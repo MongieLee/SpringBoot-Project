@@ -8,13 +8,23 @@ public class User {
     String avatar;
     Instant createdAt;
     Instant updateAt;
+    String encryptedPassword;
 
-    public User(Integer id, String username) {
+    public User(Integer id, String username, String encryptedPassword) {
         this.id = id;
         this.username = username;
         this.avatar = "";
+        this.encryptedPassword = encryptedPassword;
         this.createdAt = Instant.now();
         this.updateAt = Instant.now();
+    }
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
     public Integer getId() {

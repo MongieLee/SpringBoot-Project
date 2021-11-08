@@ -8,7 +8,13 @@ import org.springframework.context.annotation.Bean;
 
 @Mapper
 public interface UserMapper {
-    @Bean
     @Select("SELECT * FROM user WHERE id = #{id}")
     User findUserById(@Param("id") Integer id);
+
+    @Select("select * from user where username = #{username}")
+    User findUserByUsernmae(@Param("username") String username);
+
+    @Select("insert into user(username,encrypted_password,created_at,updated_at) " +
+            "values(#{username},#{encryptedPassword},now(),now())")
+    void save(@Param("username") String username, @Param("encryptedPassword") String encryptedPassword);
 }
