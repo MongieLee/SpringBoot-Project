@@ -1,7 +1,12 @@
-package hello.entity;
+package cn.ml.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.Instant;
 
+/**
+ * User DAO
+ */
 public class User {
     Integer id;
     String username;
@@ -9,6 +14,8 @@ public class User {
     Instant createdAt;
     Instant updateAt;
     String encryptedPassword;
+
+    public User(){}
 
     public User(Integer id, String username, String encryptedPassword) {
         this.id = id;
@@ -19,6 +26,7 @@ public class User {
         this.updateAt = Instant.now();
     }
 
+    @JsonIgnore
     public String getEncryptedPassword() {
         return encryptedPassword;
     }

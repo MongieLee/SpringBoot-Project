@@ -1,0 +1,1 @@
+docker run --name drbk -e MYSQL_ROOT_PASSWORD=12345678 -e MYSQL_DATABASE=drbk -d -p 3306:3306  mysql:5.7

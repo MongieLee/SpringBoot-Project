@@ -1,4 +1,4 @@
-package hello.service;
+package cn.ml.service;
 
 import javax.inject.Inject;
 
