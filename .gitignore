@@ -27,4 +27,3 @@ hs_err_pid*
 target/
 .idea/
 *.iml
-/src/main/resources/db/sql.sql
