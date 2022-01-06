@@ -72,7 +72,7 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedInUser = userService.getUserByName(authentication == null ? null : authentication.getName());
         if (loggedInUser == null) {
-            return Result.failure("用户没有登陆");
+            return Result.failure("用户没有登录");
         } else {
             return Result.success("已登陆", true, loggedInUser);
         }
