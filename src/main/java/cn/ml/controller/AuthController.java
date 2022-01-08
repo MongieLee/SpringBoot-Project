@@ -1,5 +1,6 @@
 package cn.ml.controller;
 
+import cn.ml.entity.LoginResult;
 import cn.ml.entity.Result;
 import cn.ml.entity.User;
 import cn.ml.service.UserService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
@@ -33,69 +35,72 @@ public class AuthController {
 
     @PostMapping("/auth/register")
     @ResponseBody
-    public Result register(@RequestBody Map<String, String> usernameAndPasswordJson) {
+    public LoginResult register(@RequestBody Map<String, String> usernameAndPasswordJson) {
         String username = usernameAndPasswordJson.get("username");
         String password = usernameAndPasswordJson.get("password");
         if (username == null || password == null) {
-            return Result.failure("用戶名或密碼為空");
+            return LoginResult.failure("用户名或密码为空");
         }
         if (username.length() < 1 || username.length() > 15) {
-            return Result.failure("無效用戶名");
+            return LoginResult.failure("无效用户名");
         }
         if (password.length() < 1 || password.length() > 15) {
-            return Result.failure("无效密码");
+            return LoginResult.failure("无效密码");
         }
         try {
             userService.save(username, password);
-            return Result.success("注册成功!", false, null);
+            return LoginResult.success("注册成功!", false);
         } catch (DuplicateKeyException e) {
-            return Result.failure("用戶已注冊");
+            return LoginResult.failure("用戶已注冊");
         }
     }
 
     @GetMapping("/auth/logout")
     @ResponseBody
-    public Object logout() {
+    public LoginResult logout() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User loggedInUser = userService.getUserByName(name);
         if (loggedInUser == null) {
-            return Result.failure("用户没有登录");
+            return LoginResult.failure("用户没有登录");
         } else {
             SecurityContextHolder.clearContext();
-            return Result.success("注销成功", false, null);
+            return LoginResult.success("注销成功", false);
         }
     }
 
     @GetMapping("/auth")
     @ResponseBody
-    public Object auth() {
+    public LoginResult auth() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedInUser = userService.getUserByName(authentication == null ? null : authentication.getName());
         if (loggedInUser == null) {
-            return Result.failure("用户没有登录");
+            return LoginResult.failure("用户没有登录");
         } else {
-            return Result.success("已登陆", true, loggedInUser);
+            return LoginResult.success("已登陆", loggedInUser);
         }
     }
 
     @PostMapping("/auth/login")
     @ResponseBody
-    public Result loggedInUser(@RequestBody Map<String, Object> usernameAndPasswordJson) {
+    public LoginResult loggedInUser(@RequestBody Map<String, Object> usernameAndPasswordJson, HttpServletRequest request) {
+//        if (request.getHeader("user-agent") == null || !request.getHeader("user-agent").contains("Mozilla")) {
+//            return LoginResult.failure("拒绝爬虫");
+//        }
         String username = usernameAndPasswordJson.get("username").toString();
         String password = usernameAndPasswordJson.get("password").toString();
         UserDetails userDetails;
         try {
             userDetails = userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
-            return Result.failure("用户不存在");
+            return LoginResult.failure("用户不存在");
         }
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         try {
             authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(token);
-            return Result.success("登录成功", true, userService.getUserByName(username));
+            return LoginResult.success("登录成功", userService.getUserByName(username));
         } catch (BadCredentialsException e) {
-            return Result.failure("密码不正确");
+            return LoginResult.failure("密码不正确");
         }
     }
 }
