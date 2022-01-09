@@ -3,7 +3,6 @@ package cn.ml.entity;
 public class LoginResult extends Result<User> {
     boolean isLogin;
 
-
     protected LoginResult(ResultEnum status, String msg, User data, boolean isLogin) {
         super(status, msg, data);
         this.isLogin = isLogin;
@@ -21,7 +20,7 @@ public class LoginResult extends Result<User> {
         return new LoginResult(ResultEnum.SUCCESSFUL, msg, null, true);
     }
 
-    public static LoginResult success(String msg,User user) {
+    public static LoginResult success(String msg, User user) {
         return new LoginResult(ResultEnum.SUCCESSFUL, msg, user, true);
     }
 
@@ -29,7 +28,7 @@ public class LoginResult extends Result<User> {
         return new LoginResult(ResultEnum.FAILURE, msg, null, false);
     }
 
-    public boolean isLogin() {
+    public boolean getIsLogin() {
         return isLogin;
     }
 }

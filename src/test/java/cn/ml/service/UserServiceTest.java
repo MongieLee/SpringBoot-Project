@@ -1,13 +1,12 @@
 package cn.ml.service;
 
+import cn.ml.dao.UserDao;
 import cn.ml.entity.User;
-import cn.ml.mapper.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +19,7 @@ class UserServiceTest {
     @Mock
     BCryptPasswordEncoder mockEncoder;
     @Mock
-    UserMapper mockMapper;
+    UserDao userDao;
     @InjectMocks
     UserService userService;
 
@@ -34,13 +33,13 @@ class UserServiceTest {
         // when
         userService.save("testUser", "testPassword");
         // then
-        verify(mockMapper).save("testUser", "testPassword");
+        verify(userDao).saveUser("testUser", "testPassword");
     }
 
     @Test
     public void testGetUserByName() {
         userService.getUserByName("testUser");
-        verify(mockMapper).findUserByUsername("testUser");
+        verify(userDao).findUserByUsername("testUser");
     }
 
     @Test
@@ -51,7 +50,7 @@ class UserServiceTest {
 
     @Test
     public void returnUserDetailsWhenUserFound() {
-        when(mockMapper.findUserByUsername("testUser"))
+        when(userDao.findUserByUsername("testUser"))
                 .thenReturn(new User(1, "testUser", "testPassword"));
         UserDetails testUser = userService.loadUserByUsername("testUser");
         Assertions.assertEquals("testUser", testUser.getUsername());

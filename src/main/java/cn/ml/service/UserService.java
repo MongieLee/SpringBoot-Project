@@ -1,7 +1,7 @@
 package cn.ml.service;
 
+import cn.ml.dao.UserDao;
 import cn.ml.entity.User;
-import cn.ml.mapper.UserMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,20 +14,24 @@ import java.util.Collections;
 @Service
 public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private UserMapper userMapper;
+    private UserDao userDao;
 
     @Inject
-    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserMapper userMapper) {
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserDao userDao) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userMapper = userMapper;
+        this.userDao = userDao;
     }
 
     public void save(String username, String password) {
-        userMapper.save(username, bCryptPasswordEncoder.encode(password));
+        userDao.saveUser(username, bCryptPasswordEncoder.encode(password));
     }
 
     public User getUserByName(String username) {
-        return userMapper.findUserByUsername(username);
+        return userDao.findUserByUsername(username);
+    }
+
+    public User getUserById(Integer id) {
+        return userDao.findUserById(id);
     }
 
     @Override
@@ -37,5 +41,10 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(username + "不存在");
         }
         return new org.springframework.security.core.userdetails.User(username, user.getEncryptedPassword(), Collections.emptyList());
+    }
+
+    public User updateUser(User user) {
+        userDao.updateUser(user);
+        return userDao.findUserById(user.getId());
     }
 }

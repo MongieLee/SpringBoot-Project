@@ -12,7 +12,7 @@ public class User {
     String username;
     String avatar;
     Instant createdAt;
-    Instant updateAt;
+    Instant updatedAt;
     String encryptedPassword;
 
     public User(){}
@@ -23,7 +23,7 @@ public class User {
         this.avatar = "";
         this.encryptedPassword = encryptedPassword;
         this.createdAt = Instant.now();
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @JsonIgnore
@@ -67,11 +67,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Instant getUpdateAt() {
-        return updateAt;
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(Instant updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
