@@ -49,7 +49,7 @@ class AuthControllerTest {
     @Test
     void returnNotLoginByDefault() throws Exception {
         mockMvc.perform(get("/auth")).andExpect(status().isOk())
-                .andExpect((result) -> assertTrue(result.getResponse().getContentAsString().contains("\"login\":false")));
+                .andExpect((result) -> assertTrue(result.getResponse().getContentAsString().contains("\"isLogin\":false")));
     }
 
     @Test
@@ -65,7 +65,7 @@ class AuthControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(new ObjectMapper().writeValueAsString(usernamePassword)))
                 .andExpect(status().isOk())
-                .andExpect((result) -> assertTrue(result.getResponse().getContentAsString().contains("\"login\":true")))
+                .andExpect((result) -> assertTrue(result.getResponse().getContentAsString().contains("\"isLogin\":true")))
                 .andReturn();
         HttpSession session = mvcResult.getRequest().getSession();
 
